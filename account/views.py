@@ -1,8 +1,9 @@
 from django.shortcuts import render
 from django.contrib.auth import login, authenticate
-from .forms import LoginForm
+from .forms import LoginForm, RegisterForm
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
+
 
 def user_login(request):
     form = LoginForm()
@@ -26,3 +27,16 @@ def user_login(request):
 @login_required()
 def dashboard(request):
     return render(request, "account/dashboard.html", {'section': 'dashboard'})
+
+def register(request):
+    form = RegisterForm()
+    if request.method == 'POST':
+        form = RegisterForm(request.POST)
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.set_password(
+                form.cleaned_data['password']
+            )
+            user.save()
+            return render(request, 'account/register_done.html', {'user': user})
+    return render(request, 'account/register.html', {'form': form})
