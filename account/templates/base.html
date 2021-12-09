@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <title>{% block title %} {% endblock %}</title>
     <link href="{% static "css/base.css" %}" rel="stylesheet">
+
 </head>
 <body>
     <div id="header">
@@ -14,8 +15,9 @@
                 <li {% if section == "dashboard" %} class="selected" {% endif %}>
                     <a href="{% url "dashboard" %}">My Dashboard</a>
                 </li>
-                <li {% if section == "images" %} class="selected" {% endif %}>
-                    <a href="#">Images</a>
+                <li {% if section == "images" %}class="selected"{% endif %}>
+                    <a href="{% url "images:list" %}">Images</a>
+                </li>
 
                 <li {% if section == "people" %} class="selected" {% endif %}>
                     <a href="#">People</a>
