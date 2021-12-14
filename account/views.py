@@ -1,5 +1,7 @@
 from django.shortcuts import get_object_or_404, render
 from django.contrib.auth import login, authenticate
+
+import actions
 from .forms import LoginForm, RegisterForm, UserEditForm, ProfileEditForm
 from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.decorators import login_required
@@ -8,6 +10,8 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from django.views.decorators.http import require_POST
 from common.decorators import ajax_required
+from actions.utils import create_action 
+from .models import Action
 
 
 
@@ -33,6 +37,7 @@ def user_login(request):
 
 @login_required()
 def dashboard(request):
+    
     return render(request, "account/dashboard.html", {'section': 'dashboard'})
 
 def register(request):
@@ -46,6 +51,7 @@ def register(request):
             )
             user.save()
             Profile.objects.create(user=user)
+            create_action(user, 'has created an account')
             return render(request, 'account/register_done.html', {'user': user})
     return render(request, 'account/register.html', {'form': form})
 
@@ -103,6 +109,7 @@ def user_follow(request):
                     user_from = request.user,
                     user_to = user
                 )
+                create_action(request.user, 'is following', user)
             else:
                 Contact.objects.filter(user_from=request.user,
                                         user_to = user).delete()
