@@ -20,7 +20,7 @@
                 </li>
 
                 <li {% if section == "people" %} class="selected" {% endif %}>
-                    <a href="#">People</a>
+                    <a href="{% url "user_list" %}">People</a>
                 </li>
             </ul>
         {% endif %}
@@ -28,7 +28,7 @@
             {% if request.user.is_authenticated %}
                 Hello {{ request.user.username }},
                 <a href="{% url "logout" %}">Logout</a>
-            {% else %}
+            {% else %}div
                 <a href="{% url "login" %}">Log-in</a>
             {% endif %}
         </span>
